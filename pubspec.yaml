@@ -72,6 +72,9 @@ flutter:
       - assets/images/ticket.png
       - assets/images/clock.png
       - assets/images/calendar.png
+      - assets/images/ticket_w.png
+      - assets/images/clock_w.png
+      - assets/images/calendar_w.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/to/resolution-aware-images

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flix/utils/app_colors.dart';
 import 'package:flutter_flix/utils/app_size.dart';
 import 'package:flutter_flix/utils/app_string.dart';
+import 'package:flutter_flix/widgets/tool_bar.dart';
 
 class MovieDetailPage extends StatelessWidget {
   const MovieDetailPage({super.key});
@@ -23,23 +24,7 @@ class MovieDetailPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/back.png",
-                          width: iconSize, height: iconSize, fit: BoxFit.cover),
-                      const Text("Detail",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "Montserrat",
-                              height: 1.5,
-                              color: Colors.white)),
-                      Image.asset("assets/images/marked.png",
-                          width: iconSize, height: iconSize, fit: BoxFit.cover)
-                    ],
-                  ),
+                  child: ToolBar("assets/images/back.png", "Detail", "assets/images/marked.png")
                 ),
                 const SizedBox(height: 20.0),
                 Stack(
@@ -156,14 +141,16 @@ class MovieDetailPage extends StatelessWidget {
                             height: 1.2)),
                   ],
                 ),
-                const DefaultTabController(
+                const SizedBox(height: 20),
+                DefaultTabController(
                     length: 3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        TabBar(
+                        const TabBar(
                             isScrollable: true,
                             dividerColor: Colors.transparent,
+                            indicatorColor: textGray,
                             tabs: [
                               Tab(
                                 child: Text("About Movie",
@@ -195,9 +182,48 @@ class MovieDetailPage extends StatelessWidget {
                                         color: Colors.white),
                                     textAlign: TextAlign.center),
                               )
-                            ])
+                            ]),
+                         SingleChildScrollView(
+                           child: Container(
+                             padding: const EdgeInsets.only(top: 30, right: 20, left: 20),
+                             height: 300,
+                             child: const TabBarView(
+                               children: [
+                                 Text(
+                                   "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
+                                   style: TextStyle(
+                                     color: Colors.white,
+                                     fontFamily: "Poppins",
+                                     fontWeight: FontWeight.w400,
+                                     fontSize: 12,
+                                     height: 1.5
+                                   )
+                                 ),
+                                 Text(
+                                     "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
+                                     style: TextStyle(
+                                         color: Colors.white,
+                                         fontFamily: "Poppins",
+                                         fontWeight: FontWeight.w400,
+                                         fontSize: 12,
+                                         height: 1.5
+                                     )),
+                                 Text(
+                                     "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
+                                     style: TextStyle(
+                                         color: Colors.white,
+                                         fontFamily: "Poppins",
+                                         fontWeight: FontWeight.w400,
+                                         fontSize: 12,
+                                         height: 1.5
+                                     ))
+                               ]
+                             ),
+                           ),
+                         )
                       ],
-                    ))
+                    )),
+
               ],
             ),
           )),

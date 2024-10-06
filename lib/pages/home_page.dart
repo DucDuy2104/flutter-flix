@@ -110,7 +110,7 @@ class HomePage extends StatelessWidget {
                         indicatorWeight: 4.0,
                       ),
                       SizedBox(
-                          height: 400,
+                          height: 300,
                           child: TabBarView(children: [
                             Center(
                                 child: MovieGrid(const [
