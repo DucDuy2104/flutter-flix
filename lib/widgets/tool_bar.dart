@@ -7,8 +7,11 @@ class ToolBar extends StatelessWidget {
   late final String leftIcon;
   late final String title;
   late final String? rightIcon;
+  final leftIconTap;
+  final rightIconTap;
 
-  ToolBar(this.leftIcon, this.title, this.rightIcon);
+  ToolBar(this.leftIcon, this.title, this.rightIcon,
+      {this.leftIconTap, this.rightIconTap});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +19,11 @@ class ToolBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(leftIcon!,
-            width: iconSize, height: iconSize, fit: BoxFit.cover),
+        GestureDetector(
+          onTap: leftIconTap,
+          child: Image.asset(leftIcon!,
+              width: iconSize, height: iconSize, fit: BoxFit.cover),
+        ),
         Text(title,
             style: const TextStyle(
                 fontSize: 16,
@@ -26,8 +32,11 @@ class ToolBar extends StatelessWidget {
                 height: 1.5,
                 color: Colors.white)),
         rightIcon != null
-            ? Image.asset(rightIcon!,
-                width: iconSize, height: iconSize, fit: BoxFit.cover)
+            ? GestureDetector(
+                onTap: rightIconTap,
+                child: Image.asset(rightIcon!,
+                    width: iconSize, height: iconSize, fit: BoxFit.cover),
+              )
             : const SizedBox(width: iconSize, height: iconSize)
       ],
     );

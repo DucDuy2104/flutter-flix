@@ -1,13 +1,89 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/api/constants.dart';
+import 'package:flutter_flix/models/movie.dart';
+import 'package:flutter_flix/pages/movie_detail.dart';
 import 'package:flutter_flix/utils//app_colors.dart';
 import 'package:flutter_flix/utils/app_string.dart';
 import 'package:flutter_flix/widgets/hot_movie_item.dart';
 import 'package:flutter_flix/widgets/search_input.dart';
 
-class HomePage extends StatelessWidget {
+import '../api/repos.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HomePage();
+  }
+}
+
+class _HomePage extends State<HomePage> {
+  late List<Movie> popularMovies,
+      nowPlayingMovies,
+      upcomingMovies,
+      topRateMovies;
+
+  Repository repo = Repository();
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      fetchMoviesPopular();
+      fetchMoviesNowPlaying();
+      fetchUpcomingMovies();
+      fetchTopRateMovies();
+    });
+  }
+
+  Future<void> fetchMoviesPopular() async {
+    try {
+      List<Movie> fetchedMovies = await repo.getMovies("/movie/popular");
+      setState(() {
+        popularMovies = fetchedMovies;
+      });
+      debugPrint(popularMovies.length.toString());
+    } catch (e) {
+      debugPrint("Error fetching movies: $e");
+    }
+  }
+
+  Future<void> fetchMoviesNowPlaying() async {
+    try {
+      List<Movie> fetchedMovies = await repo.getMovies('/movie/now_playing');
+      setState(() {
+        nowPlayingMovies = fetchedMovies;
+      });
+    } catch (e) {
+      debugPrint("Error fetching movies: $e");
+    }
+  }
+
+  Future<void> fetchUpcomingMovies() async {
+    try {
+      List<Movie> fetchedMovies = await repo.getMovies('/movie/upcoming');
+      setState(() {
+        upcomingMovies = fetchedMovies;
+      });
+    } catch (e) {
+      debugPrint("Error fetching movies: $e");
+    }
+  }
+
+  Future<void> fetchTopRateMovies() async {
+    try {
+      List<Movie> fetchedMovies = await repo.getMovies('/movie/top_rated');
+      setState(() {
+        topRateMovies = fetchedMovies;
+      });
+      debugPrint("top rate: ${fetchedMovies.length}");
+    } catch (e) {
+      debugPrint("Error fetching movies: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +114,15 @@ class HomePage extends StatelessWidget {
                 child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return const HotMovieItem();
+                      return HotMovieItem(
+                          index + 1, popularMovies[index].posterPath,
+                          onItemTab: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MovieDetailPage(
+                                    popularMovies[index].id ?? 1)));
+                      });
                     },
                     separatorBuilder: (context, index) {
                       return const SizedBox(width: 20.0);
@@ -69,7 +153,7 @@ class HomePage extends StatelessWidget {
                           Tab(
                             child: Text(
                               maxLines: 1,
-                              "Up comming",
+                              "Up coming",
                               style: TextStyle(
                                 color: Colors.white,
                                 height: 1.5,
@@ -112,20 +196,10 @@ class HomePage extends StatelessWidget {
                       SizedBox(
                           height: 300,
                           child: TabBarView(children: [
-                            Center(
-                                child: MovieGrid(const [
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl,
-                                  movieThumbUrl
-                                ])),
-                            const Center(child: Text("Upcoming")),
-                            const Center(child: Text("Top rated")),
-                            const Center(child: Text("Popular")),
+                            Center(child: MovieGrid(nowPlayingMovies)),
+                            Center(child: MovieGrid(upcomingMovies)),
+                            Center(child: MovieGrid(topRateMovies)),
+                            Center(child: MovieGrid(popularMovies)),
                           ]))
                     ],
                   ))
@@ -138,7 +212,7 @@ class HomePage extends StatelessWidget {
 }
 
 class MovieGrid extends StatelessWidget {
-  final List<String> _list;
+  final List<Movie> _list;
 
   MovieGrid(this._list, {super.key});
 
@@ -152,12 +226,23 @@ class MovieGrid extends StatelessWidget {
         crossAxisSpacing: 20.0,
         childAspectRatio: 0.75,
         padding: const EdgeInsets.only(bottom: 10.0),
-
         children: List.generate(_list.length, (index) {
           return ClipRRect(
               borderRadius: BorderRadius.circular(16.0),
-              child: Image.network(_list[index],
-                  width: 100.0, height: 145.0, fit: BoxFit.cover));
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MovieDetailPage(_list[index].id ?? 1)));
+                },
+                child: Image.network(
+                    imageHttp + (_list[index].posterPath ?? ""),
+                    width: 100.0,
+                    height: 145.0,
+                    fit: BoxFit.cover),
+              ));
         }),
       ),
     );
