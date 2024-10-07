@@ -36,7 +36,7 @@ class Repository {
     try {
       final response = await http.get(uri);
       print(response.statusCode);
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         movie = Movie.fromJson(jsonResponse);
         return movie;
@@ -48,6 +48,24 @@ class Repository {
     }
     return null;
   }
+
+  Future<List<Movie>> searchMovies(String key) async {
+    List<Movie> movies = [];
+    try {
+      if (key == '') {
+        throw Exception('khong co key');
+      }
+      var url = '$baseUrl/search/movie?api_key=$apiKey&query=$key}';
+      final uri = Uri.parse(url);
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final jsonMovies = json.decode(response.body);
+        List<dynamic> moviesJson = jsonMovies['results'];
+        movies = moviesJson.map((e) => Movie.fromJson(e)).toList();
+      }
+    } catch (_e) {
+      debugPrint('bug: $_e');
+    }
+    return movies;
+  }
 }
-
-

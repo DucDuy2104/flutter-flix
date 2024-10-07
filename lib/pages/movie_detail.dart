@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/api/repos.dart';
-import 'package:flutter_flix/utils/app_colors.dart';
-import 'package:flutter_flix/utils/app_size.dart';
-import 'package:flutter_flix/utils/app_string.dart';
+import 'package:flutter_flix/utils/shared_preferences.dart';
+import 'package:flutter_flix/values/app_colors.dart';
+import 'package:flutter_flix/values/app_size.dart';
+import 'package:flutter_flix/values/app_string.dart';
 import 'package:flutter_flix/widgets/tool_bar.dart';
 
 import '../models/movie.dart';
@@ -15,7 +16,7 @@ class MovieDetailPage extends StatefulWidget {
   final int id;
   final repos = Repository();
 
-  MovieDetailPage(this.id);
+  MovieDetailPage(this.id, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +26,8 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPage extends State<MovieDetailPage> {
   late int _id;
-  late Movie movie;
+  Movie? movie;
+  bool isLike = false;
 
   @override
   void initState() {
@@ -34,9 +36,17 @@ class _MovieDetailPage extends State<MovieDetailPage> {
     getMovie();
   }
 
+  Future<void> check(Movie m) async {
+    bool liked = await checkLike(m);
+    setState(() {
+      isLike = liked;
+    });
+  }
+
   Future<void> getMovie() async {
     try {
       final Movie fetchedMovie = (await widget.repos.getMovieDetail(_id))!;
+      check(fetchedMovie);
       setState(() {
         movie = fetchedMovie;
       });
@@ -45,8 +55,16 @@ class _MovieDetailPage extends State<MovieDetailPage> {
     }
   }
 
+  Future<void> saveOrDelete() async {
+    await addOrDeleteMovie(movie!);
+    check(movie!);
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (movie == null) {
+      return const SizedBox();
+    }
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -63,9 +81,14 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       child: ToolBar(
                         "assets/images/back.png",
                         "Detail",
-                        "assets/images/marked.png",
+                        isLike
+                            ? "assets/images/marked.png"
+                            : "assets/images/not_mark.png",
                         leftIconTap: () {
                           Navigator.pop(context);
+                        },
+                        rightIconTap: () {
+                          saveOrDelete();
                         },
                       )),
                   const SizedBox(height: 20.0),
@@ -77,7 +100,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                               bottomLeft: Radius.circular(16.0),
                               bottomRight: Radius.circular(16.0)),
                           child: Image.network(
-                              imageHttp + (movie.backdropPath ?? ""),
+                              imageHttp + (movie?.backdropPath ?? ""),
                               width: double.infinity,
                               height: 210,
                               fit: BoxFit.cover)),
@@ -105,7 +128,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                         color: Color(0xFFFF8700), size: 16),
                                     const SizedBox(width: 3),
                                     Text(
-                                      movie.rate!.toStringAsFixed(2),
+                                      movie?.rate!.toStringAsFixed(1) ?? "",
                                       style: const TextStyle(
                                           fontFamily: "Montserrat",
                                           fontWeight: FontWeight.w600,
@@ -121,12 +144,15 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       Positioned(
                         left: 30,
                         bottom: -60,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16.0),
-                          child: Image.network(
-                              imageHttp + (movie.posterPath ?? ""),
-                              width: 95,
-                              height: 120),
+                        child: Hero(
+                          tag: 'hero-image',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.network(
+                                imageHttp + (movie?.posterPath ?? ""),
+                                width: 95,
+                                height: 120),
+                          ),
                         ),
                       ),
                       Positioned(
@@ -134,7 +160,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                         left: 140,
                         child: SizedBox(
                           width: 210,
-                          child: Text(movie.name ?? "",
+                          child: Text(movie?.name ?? "",
                               style: const TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 18,
@@ -153,7 +179,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       Image.asset("assets/images/calendar.png",
                           width: 16, height: 16, fit: BoxFit.cover),
                       const SizedBox(width: 3),
-                      Text(movie.releaseDate!.substring(0, 4),
+                      Text(movie?.releaseDate!.substring(0, 4) ?? "",
                           style: const TextStyle(
                               fontFamily: "Montserrat",
                               fontSize: 12,
@@ -177,7 +203,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       const SizedBox(width: 5),
                       Image.asset('assets/images/ticket.png'),
                       const SizedBox(width: 3),
-                      Text(movie.genres?[0].name ?? "",
+                      Text(movie?.genres?[0].name ?? "",
                           style: const TextStyle(
                               fontFamily: "Montserrat",
                               fontSize: 12,
@@ -234,7 +260,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                   top: 30, right: 20, left: 20),
                               height: 300,
                               child: TabBarView(children: [
-                                Text(movie.description ?? "",
+                                Text(movie?.description ?? "",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: "Poppins",

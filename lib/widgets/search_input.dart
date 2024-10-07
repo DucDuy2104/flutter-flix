@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flix/utils//app_colors.dart';
+import 'package:flutter_flix/values/app_colors.dart';
+
+
 
 class CustomInput extends StatelessWidget {
-  const CustomInput({super.key});
+  final onSubmit;
+  final controller;
+  const CustomInput({super.key, this.onSubmit, this.controller});
+
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(child: TextField(
+          controller: controller,
+          onSubmitted: onSubmit,
           decoration: InputDecoration(
             hintText: "Search",
             hintStyle: const TextStyle(

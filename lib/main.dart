@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flix/pages/movie_detail.dart';
-import 'package:flutter_flix/utils//app_colors.dart';
+import 'package:flutter_flix/providers/movies_provider.dart';
+import 'package:flutter_flix/values/app_colors.dart';
+import 'package:flutter_flix/values/app_size.dart';
 import 'package:flutter_flix/pages/home_page.dart';
 import 'package:flutter_flix/pages/search_page.dart';
 import 'package:flutter_flix/pages/watch_list.dart';
-import 'package:flutter_flix/utils/app_size.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => MoviesProvider())],
+      child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyApp();
+  }
+
+}
+
+class _MyApp extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +46,7 @@ class _BottomNav extends State<BottomNav> {
   final List<Widget> _list = [
     const HomePage(),
     const SearchPage(),
-    const WatchListPage()
+    WatchListPage()
   ];
 
   @override
@@ -60,9 +70,15 @@ class _BottomNav extends State<BottomNav> {
             unselectedItemColor: const Color(0xFF67686D),
             selectedItemColor: const Color(0xFF0296E5),
             unselectedLabelStyle: const TextStyle(
-                height: 2.5, fontFamily: "Roboto", fontWeight: FontWeight.w500, fontSize: 12),
+                height: 2.5,
+                fontFamily: "Roboto",
+                fontWeight: FontWeight.w500,
+                fontSize: 12),
             selectedLabelStyle: const TextStyle(
-                height: 2.5, fontFamily: "Roboto", fontWeight: FontWeight.w500, fontSize: 12),
+                height: 2.5,
+                fontFamily: "Roboto",
+                fontWeight: FontWeight.w500,
+                fontSize: 12),
             items: [
               BottomNavigationBarItem(
                   icon: _currentIndex == 0

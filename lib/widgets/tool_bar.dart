@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/values/app_size.dart';
 
-import '../utils/app_size.dart';
 
 class ToolBar extends StatelessWidget {
-  late final String leftIcon;
-  late final String title;
-  late final String? rightIcon;
+  final String? leftIcon;
+  final String title;
+  final String? rightIcon;
   final leftIconTap;
   final rightIconTap;
 
-  ToolBar(this.leftIcon, this.title, this.rightIcon,
-      {this.leftIconTap, this.rightIconTap});
+  const ToolBar(this.leftIcon, this.title, this.rightIcon,
+      {super.key, this.leftIconTap, this.rightIconTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +19,13 @@ class ToolBar extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: leftIconTap,
-          child: Image.asset(leftIcon!,
-              width: iconSize, height: iconSize, fit: BoxFit.cover),
-        ),
+        leftIcon != null
+            ? GestureDetector(
+                onTap: leftIconTap,
+                child: Image.asset(leftIcon!,
+                    width: iconSize, height: iconSize, fit: BoxFit.cover),
+              )
+            : const SizedBox(width: iconSize, height: iconSize),
         Text(title,
             style: const TextStyle(
                 fontSize: 16,

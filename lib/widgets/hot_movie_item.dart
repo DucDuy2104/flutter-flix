@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flix/utils//app_colors.dart';
-import 'package:flutter_flix/utils/app_string.dart';
 
 import '../api/constants.dart';
+import '../values/app_colors.dart';
 
 class HotMovieItem extends StatelessWidget {
   final int? id;
@@ -23,13 +22,16 @@ class HotMovieItem extends StatelessWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Image.network(
-                imageHttp + posterPath!,
-                height: 210,
-                width: 145,
-                fit: BoxFit.cover,
+            Hero(
+              tag: 'hero-image',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: Image.network(
+                  imageHttp + posterPath!,
+                  height: 210,
+                  width: 145,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Positioned(

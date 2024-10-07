@@ -26,6 +26,18 @@ class Movie  {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id" : id,
+      "title" : name,
+      "poster_path": posterPath,
+      "overview" : description,
+      "vote_average" : rate,
+      "backdrop_path": backdropPath,
+      "release_date": releaseDate
+    };
+  }
+
 }
 
 
