@@ -5,7 +5,6 @@ import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/values/app_size.dart';
 import 'package:provider/provider.dart';
 
-
 class ToolBar extends StatelessWidget {
   final String? leftIcon;
   final String title;
@@ -32,11 +31,12 @@ class ToolBar extends StatelessWidget {
             : const SizedBox(width: iconSize, height: iconSize),
         Text(title,
             style: TextStyle(
+                decoration: TextDecoration.none,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 fontFamily: "Montserrat",
                 height: 1.5,
-                color: isDark? Colors.white : Colors.black)),
+                color: isDark ? Colors.white : Colors.black)),
         rightIcon != null
             ? GestureDetector(
                 onTap: rightIconTap,

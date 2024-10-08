@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/models/movie.dart';
 import 'package:flutter_flix/pages/movie_detail.dart';
+import 'package:flutter_flix/pages/profile_page.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
 import 'package:flutter_flix/providers/theme_manager.dart';
-import '../values/app_colors.dart';
 import 'package:flutter_flix/widgets/hot_movie_item.dart';
 import 'package:flutter_flix/widgets/search_input.dart';
 import 'package:provider/provider.dart';
-
 import '../api/repos.dart';
 
 class HomePage extends StatefulWidget {
@@ -119,16 +118,31 @@ class _HomePage extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => ProfilePage()));
+                      },
+                      child: Hero(
+                        tag: 'avatar-hero',
+                        child: ClipOval(
+                          child: Image.asset("assets/images/flutter_icon.png",
+                              width: 30, height: 30, fit: BoxFit.cover,),
+                        ),
+                      ),
+                    ),
                     Text(
                       "What do you want to watch?",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Switch(
-                        value: context.watch<ThemeManager>().themeMode ==
-                            ThemeMode.dark,
-                        onChanged: (value) {
-                          context.read<ThemeManager>().toggleTheme(value);
-                        },
+                      value: context.watch<ThemeManager>().themeMode ==
+                          ThemeMode.dark,
+                      onChanged: (value) {
+                        context.read<ThemeManager>().toggleTheme(value);
+                      },
                       activeColor: Colors.white,
                     ),
                   ]),

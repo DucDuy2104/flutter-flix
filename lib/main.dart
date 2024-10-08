@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/pages/profile_page.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
 import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/theme/theme_constants.dart';

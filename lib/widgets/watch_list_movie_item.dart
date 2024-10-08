@@ -14,10 +14,13 @@ class WatchListMovieItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDark = context.watch<ThemeManager>().themeMode == ThemeMode.dark;
-    Color textColor = isDark? Colors.white : Colors.black;
-    String ticketIcon = isDark? "assets/images/ticket.png" : "assets/images/ticket_g.png";
-    String calendarIcon = isDark? "assets/images/calendar.png" : "assets/images/calendar_g.png";
-    String clockIcon = isDark? "assets/images/clock.png" : "assets/images/clock_g.png";
+    Color textColor = isDark ? Colors.white : Colors.black;
+    String ticketIcon =
+        isDark ? "assets/images/ticket.png" : "assets/images/ticket_g.png";
+    String calendarIcon =
+        isDark ? "assets/images/calendar.png" : "assets/images/calendar_g.png";
+    String clockIcon =
+        isDark ? "assets/images/clock.png" : "assets/images/clock_g.png";
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -30,8 +33,21 @@ class WatchListMovieItem extends StatelessWidget {
               flex: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Image.network(imageHttp + (movie?.posterPath ?? ""),
-                    width: 95, height: 120, fit: BoxFit.cover),
+                child: Image.network(
+                  imageHttp + (movie?.posterPath ?? ""),
+                  width: 95,
+                  height: 120,
+                  fit: BoxFit.cover,
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    return Image.asset(
+                      'assets/images/white.png',
+                      width: 95,
+                      height: 120,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(width: 10),
@@ -93,7 +109,7 @@ class WatchListMovieItem extends StatelessWidget {
                           Image.asset(calendarIcon,
                               width: 13, height: 13, fit: BoxFit.cover),
                           const SizedBox(width: 3),
-                          Text(movie?.releaseDate?.substring(0,4) ?? "",
+                          Text(movie?.releaseDate?.substring(0, 4) ?? "",
                               style: TextStyle(
                                   color: textColor,
                                   fontFamily: "Poppins",

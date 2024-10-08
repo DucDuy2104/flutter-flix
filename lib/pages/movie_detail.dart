@@ -187,8 +187,8 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       Image.asset("assets/images/calendar.png",
                           width: 16, height: 16, fit: BoxFit.cover),
                       const SizedBox(width: 3),
-                      Text(movie?.releaseDate!.substring(0, 4) ?? "",
-                          style: const TextStyle(
+                      const Text("2021",
+                          style: TextStyle(
                               fontFamily: "Montserrat",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
