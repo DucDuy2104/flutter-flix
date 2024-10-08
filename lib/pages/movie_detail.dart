@@ -7,6 +7,7 @@ import 'package:flutter_flix/api/repos.dart';
 import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/utils/shared_preferences.dart';
 import 'package:flutter_flix/values/app_colors.dart';
+import 'package:flutter_flix/widgets/review_item.dart';
 import 'package:flutter_flix/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -276,14 +277,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                         height: 1.5)),
-                                Text(
-                                    "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
-                                    style: TextStyle(
-                                        color: textColor,
-                                        fontFamily: "Poppins",
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        height: 1.5)),
+                                ReviewItem(),
                                 Text(
                                     "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
                                     style: TextStyle(

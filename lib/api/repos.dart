@@ -4,6 +4,8 @@ import 'package:flutter_flix/api/constants.dart';
 import '../models/movie.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/review.dart';
+
 class Repository {
   Future<List<Movie>> getMovies(String endpoint) async {
     List<Movie> movies = [];
@@ -67,5 +69,27 @@ class Repository {
       debugPrint('bug: $_e');
     }
     return movies;
+  }
+
+  Future<List<Review>> getReviews(int movieId) async {
+    List<Review> reviews = [];
+    var url = '$baseUrl/movie/$movieId/reivews?api_key=$apiKey';
+    var uri = Uri.parse(url);
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        List<dynamic> reviewsJson = jsonResponse['results'];
+        reviews = reviewsJson
+            .map((reviewJson) => Review.fromJson(reviewJson))
+            .toList();
+      } else {
+        throw Exception('Failed to load movies: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint("Có lỗi lấy reviews: $e");
+    }
+
+    return reviews;
   }
 }
