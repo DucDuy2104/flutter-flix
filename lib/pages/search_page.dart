@@ -12,6 +12,7 @@ import 'package:flutter_flix/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../models/movie.dart';
+import '../providers/theme_manager.dart';
 import '../widgets/watch_list_movie_item.dart';
 
 class SearchPage extends StatefulWidget {
@@ -43,7 +44,7 @@ class _SearchPage extends State<SearchPage> {
     return Container(
         width: double.infinity,
         height: double.infinity,
-        color: darkBg,
+        color: Theme.of(context).colorScheme.primary,
         child: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -84,10 +85,10 @@ class _SearchPage extends State<SearchPage> {
                   SizedBox(
                     height: 450,
                     child: mSearchMovies.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Text(
                               "No results found", // Hiển thị khi danh sách trống
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: context.watch<ThemeManager>().themeMode == ThemeMode.dark ?  Colors.white : Colors.black),
                             ),
                           )
                         : ListView.separated(

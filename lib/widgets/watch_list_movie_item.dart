@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
+import 'package:provider/provider.dart';
 
 import '../models/movie.dart';
+import '../providers/theme_manager.dart';
 
 class WatchListMovieItem extends StatelessWidget {
   final Movie? movie;
@@ -12,6 +13,11 @@ class WatchListMovieItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = context.watch<ThemeManager>().themeMode == ThemeMode.dark;
+    Color textColor = isDark? Colors.white : Colors.black;
+    String ticketIcon = isDark? "assets/images/ticket.png" : "assets/images/ticket_g.png";
+    String calendarIcon = isDark? "assets/images/calendar.png" : "assets/images/calendar_g.png";
+    String clockIcon = isDark? "assets/images/clock.png" : "assets/images/clock_g.png";
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -40,8 +46,8 @@ class WatchListMovieItem extends StatelessWidget {
                     Flexible(
                       flex: 1,
                       child: Text(movie?.name ?? "",
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: textColor,
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                               fontSize: 16,
@@ -69,12 +75,12 @@ class WatchListMovieItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset("assets/images/ticket_w.png",
+                          Image.asset(ticketIcon,
                               width: 13, height: 13, fit: BoxFit.cover),
                           const SizedBox(width: 3),
-                          const Text("Action",
+                          Text("Action",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontFamily: "Poppins",
                                   fontSize: 12,
                                   height: 1.5,
@@ -84,12 +90,12 @@ class WatchListMovieItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset("assets/images/calendar_w.png",
+                          Image.asset(calendarIcon,
                               width: 13, height: 13, fit: BoxFit.cover),
                           const SizedBox(width: 3),
                           Text(movie?.releaseDate?.substring(0,4) ?? "",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontFamily: "Poppins",
                                   fontSize: 12,
                                   height: 1.5,
@@ -99,12 +105,12 @@ class WatchListMovieItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset("assets/images/clock_w.png",
+                          Image.asset(clockIcon,
                               width: 13, height: 13, fit: BoxFit.cover),
                           const SizedBox(width: 3),
-                          const Text("139 minutes",
+                          Text("139 minutes",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontFamily: "Poppins",
                                   fontSize: 12,
                                   height: 1.5,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
+import 'package:flutter_flix/providers/theme_manager.dart';
+import 'package:flutter_flix/theme/theme_constants.dart';
 import 'package:flutter_flix/values/app_colors.dart';
 import 'package:flutter_flix/values/app_size.dart';
 import 'package:flutter_flix/pages/home_page.dart';
@@ -8,9 +10,10 @@ import 'package:flutter_flix/pages/watch_list.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => MoviesProvider())],
-      child: MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => MoviesProvider()),
+    ChangeNotifierProvider(create: (_) => ThemeManager())
+  ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -18,16 +21,26 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MyApp();
   }
-
 }
 
 class _MyApp extends State<MyApp> {
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    debugPrint(
+        "theme mode change: ${context.watch<ThemeManager>().themeMode}");
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SafeArea(child: BottomNav()),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: context.watch<ThemeManager>().themeMode,
+      home: const SafeArea(child: BottomNav()),
     );
   }
 }
@@ -60,7 +73,7 @@ class _BottomNav extends State<BottomNav> {
             border:
                 Border(top: BorderSide(width: 1, color: Color(0xFF0296E5)))),
         child: BottomNavigationBar(
-            backgroundColor: darkBg,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             currentIndex: _currentIndex,
             onTap: (index) {
               setState(() {

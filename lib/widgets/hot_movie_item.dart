@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/main.dart';
+import 'package:flutter_flix/providers/theme_manager.dart';
+import 'package:provider/provider.dart';
 
 import '../api/constants.dart';
 import '../values/app_colors.dart';
@@ -21,17 +24,13 @@ class HotMovieItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 50, left: 10),
         child: Stack(
           clipBehavior: Clip.none,
-          children: [
-            Hero(
-              tag: 'hero-image',
-              child: ClipRRect(
+          children: [ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
                 child: Image.network(
                   imageHttp + posterPath!,
                   height: 210,
                   width: 145,
                   fit: BoxFit.cover,
-                ),
               ),
             ),
             Positioned(
@@ -51,8 +50,8 @@ class HotMovieItem extends StatelessWidget {
                           ..color = const Color(0xFF0296E5)),
                   ),
                   Text(id.toString(),
-                      style: const TextStyle(
-                          color: darkBg,
+                      style: TextStyle(
+                          color: context.watch<ThemeManager>().themeMode == ThemeMode.dark ? Color(0xFF242A32) : Color(0xFF0296E5),
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w600,
                           fontSize: 93))

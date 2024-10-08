@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/main.dart';
+import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/values/app_size.dart';
+import 'package:provider/provider.dart';
 
 
 class ToolBar extends StatelessWidget {
@@ -15,6 +18,7 @@ class ToolBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = context.watch<ThemeManager>().themeMode == ThemeMode.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,12 +31,12 @@ class ToolBar extends StatelessWidget {
               )
             : const SizedBox(width: iconSize, height: iconSize),
         Text(title,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 fontFamily: "Montserrat",
                 height: 1.5,
-                color: Colors.white)),
+                color: isDark? Colors.white : Colors.black)),
         rightIcon != null
             ? GestureDetector(
                 onTap: rightIconTap,

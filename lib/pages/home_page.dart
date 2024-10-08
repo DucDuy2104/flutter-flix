@@ -3,6 +3,7 @@ import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/models/movie.dart';
 import 'package:flutter_flix/pages/movie_detail.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
+import 'package:flutter_flix/providers/theme_manager.dart';
 import '../values/app_colors.dart';
 import 'package:flutter_flix/widgets/hot_movie_item.dart';
 import 'package:flutter_flix/widgets/search_input.dart';
@@ -11,8 +12,7 @@ import 'package:provider/provider.dart';
 import '../api/repos.dart';
 
 class HomePage extends StatefulWidget {
-  final onChangeTheme;
-  const HomePage({super.key, this.onChangeTheme});
+  const HomePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,6 +29,12 @@ class _HomePage extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startFetch(context);
     });
+  }
+
+  themeListener() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> startFetch(BuildContext context) async {
@@ -91,6 +97,7 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = context.watch<ThemeManager>().themeMode == ThemeMode.dark;
     List<Movie> moviesUpComing =
         context.watch<MoviesProvider>().mUpcomingMovies;
     List<Movie> moviesTopRate = context.watch<MoviesProvider>().mTopRateMovies;
@@ -101,7 +108,7 @@ class _HomePage extends State<HomePage> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: darkBg,
+      color: Theme.of(context).colorScheme.primary,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -112,19 +119,18 @@ class _HomePage extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "What do you want to watch?",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Poppins",
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          height: 1.5),
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    Switch(value: false, onChanged: (value) {
-
-                    })
-
+                    Switch(
+                        value: context.watch<ThemeManager>().themeMode ==
+                            ThemeMode.dark,
+                        onChanged: (value) {
+                          context.read<ThemeManager>().toggleTheme(value);
+                        },
+                      activeColor: Colors.white,
+                    ),
                   ]),
               const SizedBox(height: 23.0),
               const CustomInput(),
@@ -156,7 +162,7 @@ class _HomePage extends State<HomePage> {
                   length: 4,
                   child: Column(
                     children: [
-                      const TabBar(
+                      TabBar(
                         isScrollable: true,
                         dividerColor: Colors.transparent,
                         tabAlignment: TabAlignment.start,
@@ -166,7 +172,7 @@ class _HomePage extends State<HomePage> {
                               maxLines: 1,
                               "Now playing",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: isDark ? Colors.white : Colors.black,
                                 height: 1.5,
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
@@ -179,7 +185,7 @@ class _HomePage extends State<HomePage> {
                               maxLines: 1,
                               "Up coming",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: isDark ? Colors.white : Colors.black,
                                 height: 1.5,
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
@@ -192,7 +198,7 @@ class _HomePage extends State<HomePage> {
                               maxLines: 1,
                               "Top rate",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: isDark ? Colors.white : Colors.black,
                                 height: 1.5,
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
@@ -205,7 +211,7 @@ class _HomePage extends State<HomePage> {
                               maxLines: 1,
                               "Popular",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: isDark ? Colors.white : Colors.black,
                                 height: 1.5,
                                 fontFamily: 'Poppins',
                                 fontSize: 14,
@@ -214,17 +220,18 @@ class _HomePage extends State<HomePage> {
                             ),
                           )
                         ],
-                        indicatorColor: Color(0xFF3A3F47),
+                        indicatorColor: const Color(0xFF3A3F47),
                         indicatorWeight: 4.0,
                       ),
                       SizedBox(
-                          height: 300,
-                          child: TabBarView(children: [
-                            Center(child: MovieGrid(moviesNowPlaying)),
-                            Center(child: MovieGrid(moviesUpComing)),
-                            Center(child: MovieGrid(moviesTopRate)),
-                            Center(child: MovieGrid(moviesPopular)),
-                          ]))
+                        height: 300,
+                        child: TabBarView(children: [
+                          Center(child: MovieGrid(moviesNowPlaying)),
+                          Center(child: MovieGrid(moviesUpComing)),
+                          Center(child: MovieGrid(moviesTopRate)),
+                          Center(child: MovieGrid(moviesPopular)),
+                        ]),
+                      )
                     ],
                   ))
             ],

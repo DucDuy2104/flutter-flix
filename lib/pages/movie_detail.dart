@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/api/repos.dart';
+import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/utils/shared_preferences.dart';
 import 'package:flutter_flix/values/app_colors.dart';
-import 'package:flutter_flix/values/app_size.dart';
-import 'package:flutter_flix/values/app_string.dart';
 import 'package:flutter_flix/widgets/tool_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../models/movie.dart';
 
@@ -65,12 +65,25 @@ class _MovieDetailPage extends State<MovieDetailPage> {
     if (movie == null) {
       return const SizedBox();
     }
+    bool isDark = context.watch<ThemeManager>().themeMode == ThemeMode.dark;
+    Color textColor = isDark ? Colors.white : Colors.black;
+    String likeIcon = '';
+    if (isDark) {
+      likeIcon =
+          isLike ? "assets/images/marked.png" : "assets/images/not_mark.png";
+    } else {
+      likeIcon = isLike
+          ? "assets/images/marked_b.png"
+          : "assets/images/not_mark_b.png";
+    }
+    String backIcon =
+        isDark ? "assets/images/back.png" : "assets/images/back_b.png";
     return SafeArea(
       child: Scaffold(
         body: Container(
             width: double.infinity,
             height: double.infinity,
-            color: darkBg,
+            color: Theme.of(context).colorScheme.primary,
             child: Padding(
               padding: const EdgeInsets.only(top: 20),
               child: Column(
@@ -79,11 +92,9 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: ToolBar(
-                        "assets/images/back.png",
+                        backIcon,
                         "Detail",
-                        isLike
-                            ? "assets/images/marked.png"
-                            : "assets/images/not_mark.png",
+                        likeIcon,
                         leftIconTap: () {
                           Navigator.pop(context);
                         },
@@ -144,15 +155,12 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       Positioned(
                         left: 30,
                         bottom: -60,
-                        child: Hero(
-                          tag: 'hero-image',
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16.0),
-                            child: Image.network(
-                                imageHttp + (movie?.posterPath ?? ""),
-                                width: 95,
-                                height: 120),
-                          ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: Image.network(
+                              imageHttp + (movie?.posterPath ?? ""),
+                              width: 95,
+                              height: 120),
                         ),
                       ),
                       Positioned(
@@ -161,12 +169,12 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                         child: SizedBox(
                           width: 210,
                           child: Text(movie?.name ?? "",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   height: 1.5,
-                                  color: Colors.white)),
+                                  color: textColor)),
                         ),
                       )
                     ],
@@ -218,10 +226,11 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const TabBar(
+                          TabBar(
                               isScrollable: true,
                               dividerColor: Colors.transparent,
                               indicatorColor: textGray,
+                              tabAlignment: TabAlignment.start,
                               tabs: [
                                 Tab(
                                   child: Text("About Movie",
@@ -230,7 +239,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                           fontSize: 14,
                                           height: 1.5,
                                           fontWeight: FontWeight.w500,
-                                          color: Colors.white),
+                                          color: textColor),
                                       textAlign: TextAlign.center),
                                 ),
                                 Tab(
@@ -240,7 +249,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                           fontSize: 14,
                                           height: 1.5,
                                           fontWeight: FontWeight.w500,
-                                          color: Colors.white),
+                                          color: textColor),
                                       textAlign: TextAlign.center),
                                 ),
                                 Tab(
@@ -250,7 +259,7 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                                           fontSize: 14,
                                           height: 1.5,
                                           fontWeight: FontWeight.w500,
-                                          color: Colors.white),
+                                          color: textColor),
                                       textAlign: TextAlign.center),
                                 )
                               ]),
@@ -261,24 +270,24 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                               height: 300,
                               child: TabBarView(children: [
                                 Text(movie?.description ?? "",
-                                    style: const TextStyle(
-                                        color: Colors.white,
+                                    style: TextStyle(
+                                        color: textColor,
                                         fontFamily: "Poppins",
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                         height: 1.5)),
-                                const Text(
+                                Text(
                                     "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
                                     style: TextStyle(
-                                        color: Colors.white,
+                                        color: textColor,
                                         fontFamily: "Poppins",
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                         height: 1.5)),
-                                const Text(
+                                Text(
                                     "From DC Comics comes the Suicide Squad, an antihero team of incarcerated supervillains who act as deniable assets for the United States government, undertaking high-risk black ops missions in exchange for commuted prison sentences.",
                                     style: TextStyle(
-                                        color: Colors.white,
+                                        color: textColor,
                                         fontFamily: "Poppins",
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
