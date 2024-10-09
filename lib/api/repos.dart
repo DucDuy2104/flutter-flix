@@ -8,10 +8,10 @@ import 'package:http/http.dart' as http;
 import '../models/review.dart';
 
 class Repository {
-  Future<List<Movie>> getMovies(String endpoint) async {
+  Future<List<Movie>> getMovies(String endpoint, {int page = 1}) async {
     List<Movie> movies = [];
 
-    var url = '$baseUrl$endpoint?api_key=$apiKey';
+    var url = '$baseUrl$endpoint?api_key=$apiKey&page=$page';
     final uri = Uri.parse(url);
 
     try {

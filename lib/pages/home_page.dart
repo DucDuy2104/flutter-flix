@@ -21,10 +21,62 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   Repository repo = Repository();
+  final ScrollController _popularMoviesController = ScrollController();
+  final ScrollController _topRateMoviesController = ScrollController();
+  final ScrollController _nowPlayingMoviesController = ScrollController();
+  final ScrollController _upComingMoviesController = ScrollController();
+  int popularPage = 1;
+  int nowPlayingPage = 1;
+  int upComingPage = 1;
+  int topRatePage = 1;
 
   @override
   void initState() {
     super.initState();
+    _popularMoviesController.addListener(() {
+      if (_popularMoviesController.hasClients) {
+        if (_popularMoviesController.position.atEdge) {
+          bool isEnd = _popularMoviesController.position.pixels ==
+              _popularMoviesController.position.maxScrollExtent;
+          if (isEnd) {
+            fetchMoviesPopular(context);
+          }
+        }
+      }
+    });
+    _topRateMoviesController.addListener(() {
+      if (_topRateMoviesController.hasClients) {
+        if (_topRateMoviesController.position.atEdge) {
+          bool isEnd = _topRateMoviesController.position.pixels ==
+              _topRateMoviesController.position.maxScrollExtent;
+          if (isEnd) {
+            fetchTopRateMovies(context);
+          }
+        }
+      }
+    });
+    _upComingMoviesController.addListener(() {
+      if (_upComingMoviesController.hasClients) {
+        if (_upComingMoviesController.position.atEdge) {
+          bool isEnd = _upComingMoviesController.position.pixels ==
+              _upComingMoviesController.position.maxScrollExtent;
+          if (isEnd) {
+            fetchUpcomingMovies(context);
+          }
+        }
+      }
+    });
+    _nowPlayingMoviesController.addListener(() {
+      if (_nowPlayingMoviesController.hasClients) {
+        if (_nowPlayingMoviesController.position.atEdge) {
+          bool isEnd = _nowPlayingMoviesController.position.pixels ==
+              _nowPlayingMoviesController.position.maxScrollExtent;
+          if (isEnd) {
+            fetchMoviesNowPlaying(context);
+          }
+        }
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startFetch(context);
     });
@@ -47,11 +99,15 @@ class _HomePage extends State<HomePage> {
 
   Future<void> fetchMoviesPopular(BuildContext context) async {
     try {
-      List<Movie> fetchedMovies = await repo.getMovies("/movie/popular");
+      List<Movie> fetchedMovies =
+          await repo.getMovies("/movie/popular", page: popularPage);
       debugPrint("popular movies: ${fetchedMovies.length}");
       context
           .read<MoviesProvider>()
-          .setMovies(fetchedMovies, MovieTypes.popular);
+          .addMovies(fetchedMovies, MovieTypes.popular);
+      setState(() {
+        popularPage += 1;
+      });
     } catch (e) {
       debugPrint("Error fetching movies: $e");
     }
@@ -59,11 +115,15 @@ class _HomePage extends State<HomePage> {
 
   Future<void> fetchMoviesNowPlaying(BuildContext context) async {
     try {
-      List<Movie> fetchedMovies = await repo.getMovies('/movie/now_playing');
+      List<Movie> fetchedMovies =
+          await repo.getMovies('/movie/now_playing', page: nowPlayingPage);
       debugPrint("now playing movies: ${fetchedMovies.length}");
       context
           .read<MoviesProvider>()
-          .setMovies(fetchedMovies, MovieTypes.nowPlaying);
+          .addMovies(fetchedMovies, MovieTypes.nowPlaying);
+      setState(() {
+        nowPlayingPage += 1;
+      });
     } catch (e) {
       debugPrint("Error fetching movies: $e");
     }
@@ -71,11 +131,15 @@ class _HomePage extends State<HomePage> {
 
   Future<void> fetchUpcomingMovies(BuildContext context) async {
     try {
-      List<Movie> fetchedMovies = await repo.getMovies('/movie/upcoming');
+      List<Movie> fetchedMovies =
+          await repo.getMovies('/movie/upcoming', page: upComingPage);
       debugPrint("upcoming movies: ${fetchedMovies.length}");
       context
           .read<MoviesProvider>()
-          .setMovies(fetchedMovies, MovieTypes.upcoming);
+          .addMovies(fetchedMovies, MovieTypes.upcoming);
+      setState(() {
+        upComingPage += 1;
+      });
     } catch (e) {
       debugPrint("Error fetching movies: $e");
     }
@@ -83,12 +147,15 @@ class _HomePage extends State<HomePage> {
 
   Future<void> fetchTopRateMovies(BuildContext context) async {
     try {
-      List<Movie> fetchedMovies = await repo.getMovies('/movie/top_rated');
+      List<Movie> fetchedMovies =
+          await repo.getMovies('/movie/top_rated', page: topRatePage);
       debugPrint("top rate movies: ${fetchedMovies.length}");
       context
           .read<MoviesProvider>()
-          .setMovies(fetchedMovies, MovieTypes.topRate);
-      debugPrint("top rate: ${fetchedMovies.length}");
+          .addMovies(fetchedMovies, MovieTypes.topRate);
+      setState(() {
+        topRatePage += 1;
+      });
     } catch (e) {
       debugPrint("Error fetching movies: $e");
     }
@@ -128,8 +195,12 @@ class _HomePage extends State<HomePage> {
                       child: Hero(
                         tag: 'avatar-hero',
                         child: ClipOval(
-                          child: Image.asset("assets/images/flutter_icon.png",
-                              width: 30, height: 30, fit: BoxFit.cover,),
+                          child: Image.asset(
+                            "assets/images/flutter_icon.png",
+                            width: 30,
+                            height: 30,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -170,7 +241,7 @@ class _HomePage extends State<HomePage> {
                     separatorBuilder: (context, index) {
                       return const SizedBox(width: 20.0);
                     },
-                    itemCount: 20),
+                    itemCount: 5),
               ),
               DefaultTabController(
                   length: 4,
@@ -240,10 +311,18 @@ class _HomePage extends State<HomePage> {
                       SizedBox(
                         height: 300,
                         child: TabBarView(children: [
-                          Center(child: MovieGrid(moviesNowPlaying)),
-                          Center(child: MovieGrid(moviesUpComing)),
-                          Center(child: MovieGrid(moviesTopRate)),
-                          Center(child: MovieGrid(moviesPopular)),
+                          Center(
+                              child: MovieGrid(moviesNowPlaying,
+                                  _nowPlayingMoviesController)),
+                          Center(
+                              child: MovieGrid(
+                                  moviesUpComing, _upComingMoviesController)),
+                          Center(
+                              child: MovieGrid(
+                                  moviesTopRate, _topRateMoviesController)),
+                          Center(
+                              child: MovieGrid(
+                                  moviesPopular, _popularMoviesController)),
                         ]),
                       )
                     ],
@@ -258,8 +337,9 @@ class _HomePage extends State<HomePage> {
 
 class MovieGrid extends StatelessWidget {
   final List<Movie> _list;
+  ScrollController scrollController;
 
-  MovieGrid(this._list, {super.key});
+  MovieGrid(this._list, this.scrollController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -268,6 +348,7 @@ class MovieGrid extends StatelessWidget {
       child: RefreshIndicator(
         onRefresh: () async {},
         child: GridView.count(
+          controller: scrollController,
           crossAxisCount: 3,
           mainAxisSpacing: 15.0,
           crossAxisSpacing: 20.0,

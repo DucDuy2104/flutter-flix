@@ -15,7 +15,9 @@ class MoviesProvider with ChangeNotifier{
         mUpcomingMovies.addAll(movies);
         break;
       case MovieTypes.popular:
+        debugPrint("popular name before add: ${mPopularMovies.length}");
         mPopularMovies.addAll(movies);
+        debugPrint("popular name after add: ${mPopularMovies.length}");
         break;
       case MovieTypes.topRate:
         mTopRateMovies.addAll(movies);
