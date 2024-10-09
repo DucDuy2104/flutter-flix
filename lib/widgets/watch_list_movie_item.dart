@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:provider/provider.dart';
@@ -33,13 +34,12 @@ class WatchListMovieItem extends StatelessWidget {
               flex: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Image.network(
-                  imageHttp + (movie?.posterPath ?? ""),
+                child: CachedNetworkImage(
+                  imageUrl:  imageHttp + (movie?.posterPath ?? ""),
                   width: 95,
                   height: 120,
                   fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
+                  errorWidget: (context, url, error) {
                     return Image.asset(
                       'assets/images/white.png',
                       width: 95,

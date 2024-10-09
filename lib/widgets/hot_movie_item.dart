@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/main.dart';
@@ -26,8 +27,8 @@ class HotMovieItem extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Image.network(
-                  imageHttp + posterPath!,
+                child: CachedNetworkImage(
+                  imageUrl:  imageHttp + posterPath!,
                   height: 210,
                   width: 145,
                   fit: BoxFit.cover,

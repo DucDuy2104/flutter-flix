@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/models/review.dart';
@@ -63,7 +64,7 @@ class ReviewPage extends StatelessWidget {
               Center(
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.network(imageHttp + (movie?.posterPath ?? ""), height: 140, width: 90))),
+                      child: CachedNetworkImage(imageUrl: imageHttp + (movie?.posterPath ?? ""), height: 140, width: 90))),
               const SizedBox(height: 5),
               Center(
                 child: Text(movie?.name ?? "",
@@ -87,7 +88,7 @@ class ReviewPage extends StatelessWidget {
                       Row(
                         children: [
                           ClipOval(
-                              child: Image.network(avatarUrl,
+                              child: CachedNetworkImage(imageUrl:  avatarUrl,
                                   width: 50, height: 50, fit: BoxFit.cover)),
                           const SizedBox(width: 5),
                           Column(

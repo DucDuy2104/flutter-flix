@@ -1,12 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/api/repos.dart';
-import 'package:flutter_flix/main.dart';
 import 'package:flutter_flix/pages/movie_detail.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
-import 'package:flutter_flix/values/app_colors.dart';
 import 'package:flutter_flix/widgets/search_input.dart';
 import 'package:flutter_flix/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +68,8 @@ class _SearchPage extends State<SearchPage> {
                                 width: double.infinity,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16.0),
-                                  child: Image.network(
-                                      imageHttp + (i.backdropPath ?? ""),
+                                  child: CachedNetworkImage(
+                                      imageUrl:  imageHttp + (i.backdropPath ?? ""),
                                       width: double.infinity,
                                       height: 150),
                                 )),

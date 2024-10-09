@@ -41,7 +41,6 @@ dependencies:
   carousel_slider: ^5.0.0
   shared_preferences: ^2.3.1
   modal_bottom_sheet: ^3.0.0
-  flutter_pannable_rating_bar: ^2.7.2+1
   flutter_rating_bar: ^4.0.1
 
 dev_dependencies:

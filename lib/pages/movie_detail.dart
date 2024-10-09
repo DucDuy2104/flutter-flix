@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/api/repos.dart';
@@ -145,8 +145,8 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                           borderRadius: const BorderRadius.only(
                               bottomLeft: Radius.circular(16.0),
                               bottomRight: Radius.circular(16.0)),
-                          child: Image.network(
-                              imageHttp + (movie?.backdropPath ?? ""),
+                          child: CachedNetworkImage(
+                              imageUrl:  imageHttp + (movie?.backdropPath ?? ""),
                               width: double.infinity,
                               height: 210,
                               fit: BoxFit.cover)),
@@ -192,8 +192,8 @@ class _MovieDetailPage extends State<MovieDetailPage> {
                         bottom: -60,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16.0),
-                          child: Image.network(
-                              imageHttp + (movie?.posterPath ?? ""),
+                          child: CachedNetworkImage(
+                              imageUrl:  imageHttp + (movie?.posterPath ?? ""),
                               width: 95,
                               height: 120),
                         ),

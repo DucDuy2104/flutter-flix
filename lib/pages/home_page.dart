@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
 import 'package:flutter_flix/models/movie.dart';
@@ -365,8 +366,8 @@ class MovieGrid extends StatelessWidget {
                             builder: (context) =>
                                 MovieDetailPage(_list[index].id ?? 1)));
                   },
-                  child: Image.network(
-                      imageHttp + (_list[index].posterPath ?? ""),
+                  child: CachedNetworkImage(
+                      imageUrl:  imageHttp + (_list[index].posterPath ?? ""),
                       width: 100.0,
                       height: 145.0,
                       fit: BoxFit.cover),

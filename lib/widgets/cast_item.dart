@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/api/constants.dart';
@@ -28,13 +29,12 @@ class CastItem extends StatelessWidget {
         child: Row(
           children: [
             ClipOval(
-                child: Image.network(
-              imageHttp + (cast.avatarPath ?? ""),
+                child: CachedNetworkImage(
+              imageUrl:imageHttp + (cast.avatarPath ?? ""),
               width: 50,
               height: 50,
               fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
+              errorWidget: (context, url, error) {
                 return Image.asset('assets/images/white.png',
                     width: 50, height: 50);
               },
