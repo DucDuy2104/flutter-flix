@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flix/pages/profile_page.dart';
 import 'package:flutter_flix/providers/movies_provider.dart';
+import 'package:flutter_flix/providers/reivews_provider.dart';
 import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/theme/theme_constants.dart';
 import 'package:flutter_flix/values/app_colors.dart';
@@ -13,7 +14,8 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => MoviesProvider()),
-    ChangeNotifierProvider(create: (_) => ThemeManager())
+    ChangeNotifierProvider(create: (_) => ThemeManager()),
+    ChangeNotifierProvider(create: (_) => ReviewProvider())
   ], child: MyApp()));
 }
 

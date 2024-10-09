@@ -10,7 +10,7 @@ class Review {
     Author author = Author.fromJson(json['author_details']);
     return Review(
       content: json['content'],
-      id: json['id'],
+      // id: json['id'],
       createdAt: json['created_at'],
       author: author
     );

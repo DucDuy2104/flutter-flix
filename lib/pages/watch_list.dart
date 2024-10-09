@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flix/main.dart';
 import 'package:flutter_flix/pages/movie_detail.dart';
-import 'package:flutter_flix/providers/movies_provider.dart';
 import 'package:flutter_flix/providers/theme_manager.dart';
 import 'package:flutter_flix/utils/shared_preferences.dart';
-import 'package:flutter_flix/values/app_colors.dart';
 import 'package:flutter_flix/widgets/watch_list_movie_item.dart';
 import 'package:provider/provider.dart';
 import '../models/movie.dart';

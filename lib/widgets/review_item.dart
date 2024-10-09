@@ -1,40 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flix/api/constants.dart';
 
-String dummyImageUrl =
-    "https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj";
+import '../models/review.dart';
 
 class ReviewItem extends StatelessWidget {
+  final Review review;
+
+  const ReviewItem(this.review, {super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    String? avatarPath =
+        (review.author?.avatarPath?.startsWith("https") ?? false)
+            ? review.author?.avatarPath
+            : (imageHttp + (review.author!.avatarPath ?? ""));
+    return SizedBox(
       width: double.infinity,
-      height: 120,
       child: Column(
         children: [
           Row(
             children: [
               ClipOval(
-                  child: Image.network(dummyImageUrl,
-                      width: 50, height: 50, fit: BoxFit.cover)),
+                  child: Image.network(
+                avatarPath ?? "",
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.asset('assets/images/flutter_icon.png',
+                      width: 50, height: 50);
+                },
+              )),
               const SizedBox(width: 5),
-              const Expanded(
+              Expanded(
                 flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("User Name",
-                        style: TextStyle(
+                    Text(review.author?.username ?? "",
+                        style: const TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey)),
                     Row(children: [
-                      Icon(Icons.star_border,
+                      const Icon(Icons.star_border,
                           color: Color(0xFFFF8700), size: 16),
-                      SizedBox(width: 2),
-                      Text("9.0",
-                          style: TextStyle(
+                      const SizedBox(width: 2),
+                      Text(review.author?.rating.toString() ?? "",
+                          style: const TextStyle(
                               fontFamily: "Montserrat",
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
@@ -44,11 +60,11 @@ class ReviewItem extends StatelessWidget {
                   ],
                 ),
               ),
-              const Text("2021-10-9")
+              Text(review.createdAt?.substring(0, 10) ?? "")
             ],
           ),
           const SizedBox(height: 5),
-          Text(dummyImageUrl)
+          SizedBox(width: double.infinity, child: Text(review.content ?? ""))
         ],
       ),
     );

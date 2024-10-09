@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_flix/api/constants.dart';
+import '../models/cast.dart';
 import '../models/movie.dart';
 import 'package:http/http.dart' as http;
 
@@ -72,8 +73,9 @@ class Repository {
   }
 
   Future<List<Review>> getReviews(int movieId) async {
+    debugPrint("get reviews...");
     List<Review> reviews = [];
-    var url = '$baseUrl/movie/$movieId/reivews?api_key=$apiKey';
+    var url = '$baseUrl/movie/$movieId/reviews?api_key=$apiKey';
     var uri = Uri.parse(url);
     try {
       final response = await http.get(uri);
@@ -84,7 +86,7 @@ class Repository {
             .map((reviewJson) => Review.fromJson(reviewJson))
             .toList();
       } else {
-        throw Exception('Failed to load movies: ${response.statusCode}');
+        throw Exception('Failed to load reviews: ${response.statusCode}');
       }
     } catch (e) {
       debugPrint("Có lỗi lấy reviews: $e");
@@ -92,4 +94,26 @@ class Repository {
 
     return reviews;
   }
+
+  Future<List<Cast>> getCasts(int movieId)async {
+    debugPrint("get cast...");
+    List<Cast> casts = [];
+    var url = '$baseUrl/movie/$movieId/credits?api_key=$apiKey';
+    var uri = Uri.parse(url);
+    try {
+      final response = await http.get(uri);
+      if(response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        List<dynamic> castsJson = jsonResponse['cast'];
+        casts = castsJson.map((e) => Cast.fromJson(e)).toList();
+      } else {
+        throw Exception('Failed to load reviews: ${response.statusCode}');
+      }
+    } catch(e) {
+      debugPrint("Lỗi khi lấy casts $e");
+    }
+    return casts;
+  }
+
+
 }
